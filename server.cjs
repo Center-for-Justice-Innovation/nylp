@@ -1,10 +1,10 @@
 // server.cjs
 const express = require("express");
-const path = require("path");
 const compression = require("compression");
+const path = require("path");
 
 const app = express();
-const www = path.join(__dirname, "dist"); // or "build" if that's your Vite outDir
+const www = path.join(__dirname, "dist"); // change to "build" if that's your Vite outDir
 
 app.use(compression());
 app.use(express.json());
