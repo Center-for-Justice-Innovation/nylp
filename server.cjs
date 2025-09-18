@@ -12,7 +12,7 @@ app.use(express.json());
 app.get("/api/hello", (_req, res) => res.json({ ok: true }));
 
 app.use(express.static(www, { maxAge: "1d", index: false }));
-app.get("*", (_req, res) => res.sendFile(path.join(www, "index.html")));
+app.get("*", (_req, res) => res.sendFile(path.join(www, "dist/index.html")));
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on ${port}`));

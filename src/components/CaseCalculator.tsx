@@ -181,7 +181,7 @@ export function CaseCalculator({ userEmail, onSignOut }: CaseCalculatorProps) {
       <div className="hidden lg:block p-6 border-b border-border">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
-            <h1>NYC Criminal Justice Analytics</h1>
+            <h1>New York Legal Practice - Case Outcomes Tool</h1>
             <p className="text-muted-foreground">Analyze pre-trial detention, bail, and case outcome patterns</p>
           </div>
           <div className="flex items-center gap-4">
@@ -278,7 +278,7 @@ export function CaseCalculator({ userEmail, onSignOut }: CaseCalculatorProps) {
             <div className="order-2 lg:order-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Criminal Justice Analytics</CardTitle>
+                  <CardTitle>Case Outcome Information</CardTitle>
                   <CardDescription>
                     Statistical analysis based on selected parameters
                   </CardDescription>
