@@ -29,7 +29,7 @@ jobs:
         run: npm ci
 
       - name: Build Non-SSR
-        run: ng build
+        run: npm run build
 
       # Zip repo (include dist + package.json; exclude .git & node_modules to keep it small)
       - name: Zip artifact
