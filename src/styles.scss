@@ -1,1 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+/* 1) Sass @use MUST come before any other rules/at‑rules */
+@use 'styles/tokens' as *;
+@use 'styles/mixins' as *;
+@use 'styles/globals' as *;
+
+/* 2) Then Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3) Now normal CSS rules */
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --font-sans: #{inspect($font-sans)};
+  --radius: #{$radius-md};
+}
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: $gray-900;
+  background-color: $gray-50;
+}
+
+.ui-select-overlay-pane { z-index: 2000 !important; }
+
+/* Example utility classes that complement Tailwind */
+.btn { @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium; }
+.btn-primary { @apply btn bg-blue-600 text-white hover:bg-blue-700; }
+.card { @apply bg-white border rounded-xl shadow-sm; }
+
