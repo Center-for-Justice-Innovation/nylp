@@ -28,16 +28,13 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Build Non-SSR
-        run: npm run build
-
-      # Zip repo (include dist + package.json; exclude .git & node_modules to keep it small)
-      - name: Zip artifact
-        run: zip -r app.zip . -x ".git/*" "node_modules/*"
+      - name: Build app
+        run: npm run build:csr
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: app.zip
+          package:  dist/nylp-csr/browser
