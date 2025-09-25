@@ -9,12 +9,7 @@ import {
   UICardTitleComponent, 
   UICardContentComponent } from '../../ui/card.component';
 import { UILabelComponent } from '../../ui/label.component';
-import { SelectComponent } from '../../ui/select.component';
-import { SelectTriggerComponent } from '../../ui/select-trigger.component';
-import { SelectValueComponent } from '../../ui/select-value.component';
-import { SelectContentComponent } from '../../ui/select-content.component';
-import { SelectItemComponent } from '../../ui/select-item.component';
-import { SelectCtxDirective } from '../../ui/select-ctx.directive';
+import { UISelectComponent, SelectOption } from '../../ui/select.component';
 
 import { MsalService } from '@azure/msal-angular';
 
@@ -62,12 +57,7 @@ const penalCodes: readonly string[] = [
     UICardDescriptionComponent, 
     UILabelComponent, 
     UICardContentComponent,
-    SelectComponent,
-    SelectContentComponent,
-    SelectItemComponent,
-    SelectTriggerComponent,
-    SelectValueComponent,
-    SelectCtxDirective
+    UISelectComponent
   ],
   templateUrl: './decision-tool.component.html',
   styleUrls: ['./decision-tool.component.scss']
@@ -79,6 +69,21 @@ export class DecisionToolComponent {
   private fb = inject(FormBuilder);
 
   penalCodes = penalCodes;
+
+    // ⬇️ add these option arrays
+    countyNameOptions: SelectOption[] = [
+      { label: 'New York', value: 'newyork' },
+      { label: 'Kings', value: 'kings' },
+      { label: 'Queens', value: 'queens' },
+      { label: 'Bronx', value: 'bronx' },
+      { label: 'Richmond', value: 'richmond' },
+    ];
+
+    // ⬇️ add these option arrays
+    courtTypeOptions: SelectOption[] = [
+      { label: 'Local', value: 'local' },
+      { label: 'Superior', value: 'superior' }
+    ];
 
 
   form: FormGroup = this.fb.group<DecisionData>({

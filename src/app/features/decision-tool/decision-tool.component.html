@@ -10,18 +10,11 @@
       </ui-button>
     </div>
 
-    <app-select appSelectCtx>
-      <app-select-trigger><app-select-value/></app-select-trigger>
-      <app-select-content>
-        <div class="p-2">Hello overlay</div>
-      </app-select-content>
-    </app-select>
-
     <ui-card>
       <ui-card-header>
-        <ui-card-title>Case Parameters</ui-card-title>
+        <ui-card-title>Your Case Parameters</ui-card-title>
         <ui-card-description>
-          Select the appropriate parameters for this case to generate analysis summaries
+          Select the parameters that match your case to generate comparisons.
         </ui-card-description>
       </ui-card-header>
 
@@ -30,30 +23,12 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div class="space-y-3">
               <ui-label class="text-base">County Name</ui-label>
-              <app-select appSelectCtx formControlName="county" [placeholder]="'Select county'">
-                <app-select-trigger>
-                  <app-select-value></app-select-value>
-                </app-select-trigger>
-                <app-select-content>
-                  <app-select-item value="Bronx">Bronx</app-select-item>
-                  <app-select-item value="Kings">Kings</app-select-item>
-                  <app-select-item value="New York">New York</app-select-item>
-                  <app-select-item value="Queens">Queens</app-select-item>
-                  <app-select-item value="Richmond">Richmond</app-select-item>
-                </app-select-content>
-              </app-select>
+              <ui-select [options]="countyNameOptions" placeholder="Select County"></ui-select>
             </div>
 
-     
-
-            <!-- Court Type -->
             <div class="space-y-3">
-              <ui-label for="courtType" class="text-base">Court Type</ui-label>
-              <select id="courtType" formControlName="courtType" class="h-12 text-base w-full select">
-                <option value="" disabled selected>Select court type</option>
-                <option>Local</option>
-                <option>Superior</option>
-              </select>
+              <ui-label class="text-base">Court Type</ui-label>
+              <ui-select [options]="courtTypeOptions" placeholder="Select Court Type"></ui-select>
             </div>
 
             <!-- Top Charge -->
