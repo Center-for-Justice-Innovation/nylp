@@ -8,6 +8,8 @@
 @tailwind components;
 @tailwind utilities;
 
+.cdk-overlay-container { z-index: 10000; }
+
 /* 3) Now normal CSS rules */
 *, *::before, *::after { box-sizing: border-box; }
 :root {
@@ -22,10 +24,17 @@ body {
   background-color: $gray-50;
 }
 
-.ui-select-overlay-pane { z-index: 2000 !important; }
 
 /* Example utility classes that complement Tailwind */
 .btn { @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium; }
 .btn-primary { @apply btn bg-blue-600 text-white hover:bg-blue-700; }
 .card { @apply bg-white border rounded-xl shadow-sm; }
 
+.bg-accent { background-color: rgba(14,165,233,0.12); }
+.text-accent-foreground { color: #0f172a; }
+.bg-popover { background: #fff; }
+.text-popover-foreground { color: #0f172a; }
+.border { border: 1px solid rgba(0,0,0,0.12); }
+.bg-background { background: #fff; }
+:root { --ring: rgba(14,165,233,0.5); }
+.focus-visible\:ring-\[3px\] :focus-visible { box-shadow: 0 0 0 3px var(--ring); }

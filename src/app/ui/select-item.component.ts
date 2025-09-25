@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { SelectContext } from './select-context.component';
+import { SelectContext } from './select.context';
 
 @Component({
   selector: 'app-select-item',

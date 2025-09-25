@@ -10,6 +10,13 @@
       </ui-button>
     </div>
 
+    <app-select appSelectCtx>
+      <app-select-trigger><app-select-value/></app-select-trigger>
+      <app-select-content>
+        <div class="p-2">Hello overlay</div>
+      </app-select-content>
+    </app-select>
+
     <ui-card>
       <ui-card-header>
         <ui-card-title>Case Parameters</ui-card-title>
@@ -21,18 +28,23 @@
       <ui-card-content>
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <!-- County -->
             <div class="space-y-3">
-              <ui-label for="county" class="text-base">County Name</ui-label>
-              <select id="county" formControlName="county" class="h-12 text-base w-full select">
-                <option value="" disabled selected>Select county</option>
-                <option>Bronx</option>
-                <option>Kings</option>
-                <option>New York</option>
-                <option>Queens</option>
-                <option>Richmond</option>
-              </select>
+              <ui-label class="text-base">County Name</ui-label>
+              <app-select appSelectCtx formControlName="county" [placeholder]="'Select county'">
+                <app-select-trigger>
+                  <app-select-value></app-select-value>
+                </app-select-trigger>
+                <app-select-content>
+                  <app-select-item value="Bronx">Bronx</app-select-item>
+                  <app-select-item value="Kings">Kings</app-select-item>
+                  <app-select-item value="New York">New York</app-select-item>
+                  <app-select-item value="Queens">Queens</app-select-item>
+                  <app-select-item value="Richmond">Richmond</app-select-item>
+                </app-select-content>
+              </app-select>
             </div>
+
+     
 
             <!-- Court Type -->
             <div class="space-y-3">

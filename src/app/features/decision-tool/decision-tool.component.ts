@@ -2,8 +2,21 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UIButtonComponent } from '../../ui/button.component';
-import { UICardComponent, UICardDescriptionComponent, UICardHeaderComponent, UICardTitleComponent, UICardContentComponent } from '../../ui/card.component';
+import { 
+  UICardComponent, 
+  UICardDescriptionComponent, 
+  UICardHeaderComponent, 
+  UICardTitleComponent, 
+  UICardContentComponent } from '../../ui/card.component';
 import { UILabelComponent } from '../../ui/label.component';
+import { SelectComponent } from '../../ui/select.component';
+import { SelectTriggerComponent } from '../../ui/select-trigger.component';
+import { SelectValueComponent } from '../../ui/select-value.component';
+import { SelectContentComponent } from '../../ui/select-content.component';
+import { SelectItemComponent } from '../../ui/select-item.component';
+import { SelectCtxDirective } from '../../ui/select-ctx.directive';
+
+import { MsalService } from '@azure/msal-angular';
 
 export interface DecisionData {
   county: string;
@@ -40,12 +53,27 @@ const penalCodes: readonly string[] = [
 @Component({
   selector: 'app-decision-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UIButtonComponent, UICardComponent, UICardHeaderComponent, UICardTitleComponent, UICardDescriptionComponent, UILabelComponent, UICardContentComponent],
+  imports: [CommonModule, 
+    ReactiveFormsModule, 
+    UIButtonComponent, 
+    UICardComponent, 
+    UICardHeaderComponent, 
+    UICardTitleComponent, 
+    UICardDescriptionComponent, 
+    UILabelComponent, 
+    UICardContentComponent,
+    SelectComponent,
+    SelectContentComponent,
+    SelectItemComponent,
+    SelectTriggerComponent,
+    SelectValueComponent,
+    SelectCtxDirective
+  ],
   templateUrl: './decision-tool.component.html',
   styleUrls: ['./decision-tool.component.scss']
 })
 export class DecisionToolComponent {
-  @Input() username = '';
+  // @Input() username = '';
   @Output() submitDecision = new EventEmitter<DecisionData>();
   @Output() signOut = new EventEmitter<void>();
   private fb = inject(FormBuilder);
@@ -62,7 +90,16 @@ export class DecisionToolComponent {
     priorConvictions: this.fb.nonNullable.control('', { validators: Validators.required }),
   } as any); // TS helper for typed group
 
-  constructor() {}
+  constructor(private msal: MsalService) {}
+
+  username() {
+    const a = this.msal.instance.getActiveAccount();
+    return a?.name || a?.username || null;
+  }
+
+  logout() {
+    this.msal.logoutRedirect();
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {

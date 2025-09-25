@@ -1,73 +1,81 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, ViewChild, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
-import { SelectContext } from './select-context.component';
-import { Subscription } from 'rxjs';
+import { Injectable, ElementRef } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 
-@Component({
-  selector: 'app-select-content',
-  standalone: true,
-  imports: [CommonModule, OverlayModule],
-  template: `
-    <ng-template
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="ctx.triggerEl"
-      [cdkConnectedOverlayOpen]="ctx.open$.value"
-      [cdkConnectedOverlayPositions]="positions"
-      [cdkConnectedOverlayWidth]="triggerWidth"
-      (detach)="ctx.setOpen(false)"
-    >
-      <div #panel
-           [id]="panelId"
-           role="listbox"
-           class="z-50 max-h-64 overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md focus:outline-none"
-           data-slot="select-content">
-        <ng-content></ng-content>
-      </div>
-    </ng-template>
-  `,
-})
-export class SelectContentComponent implements OnDestroy {
-  ctx = inject(SelectContext);
-  @ViewChild('panel', { static: false }) panel!: ElementRef<HTMLElement>;
+export interface SelectItemRef {
+  value: string;
+  label: string;
+  disabled: boolean;
+  el?: ElementRef<HTMLElement>;
+}
 
-  @Input() align: 'start' | 'end' = 'start';
+@Injectable()
+export class SelectContext {
+  // state
+  readonly open$ = new BehaviorSubject<boolean>(false);
+  readonly value$ = new BehaviorSubject<string | null>(null);
+  readonly label$ = new BehaviorSubject<string>('');
+  readonly items$ = new BehaviorSubject<SelectItemRef[]>([]);
+  readonly activeIndex$ = new BehaviorSubject<number>(-1);
+  placeholder = 'Select…';
+  disabled = false;
 
-  triggerWidth = 0;
-  positions: ConnectedPosition[] = [
-    { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4 },
-    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4 },
-  ];
+  // element refs & a11y id
+  triggerOrigin?: CdkOverlayOrigin; // overlay origin (typed)
+  triggerEl?: ElementRef<HTMLElement>; // for width measurement/focus
+  panelId?: string; // set by content for aria-controls
 
-  panelId = `app-select-panel-${Math.random().toString(36).slice(2,8)}`;
+  // typeahead
+  private typeahead = '';
+  private typeaheadTimer?: any;
 
-  private sub = new Subscription();
+  setOpen(v: boolean) { if (!this.disabled) this.open$.next(v); }
+  toggle() { this.setOpen(!this.open$.value); }
 
-  constructor() {
-    this.ctx.panelId = this.panelId; // for aria-controls
-    this.sub.add(
-      this.ctx.open$.subscribe(open => {
-        if (open) {
-          const w = this.ctx.triggerEl?.nativeElement?.getBoundingClientRect().width || 0;
-          this.triggerWidth = Math.ceil(w);
-          const v = this.ctx.value$.value ?? '';
-          this.ctx.setActiveByValue(v);
-        }
-      })
-    );
+  setValue(val: string | null, label?: string) {
+    this.value$.next(val);
+    this.label$.next(label ?? (this.items$.value.find(i => i.value === val)?.label || ''));
   }
 
-  ngOnDestroy(): void { this.sub.unsubscribe(); }
+  registerItem(item: SelectItemRef) { this.items$.next([...this.items$.value, item]); }
+  unregisterItem(value: string) { this.items$.next(this.items$.value.filter(i => i.value !== value)); }
 
-  @HostBinding('attr.data-slot') slot = 'select-portal';
-  @HostListener('keydown', ['$event']) onKey(e: KeyboardEvent) {
-    const key = e.key;
-    if (key === 'ArrowDown') { e.preventDefault(); this.ctx.moveActive(1); }
-    else if (key === 'ArrowUp') { e.preventDefault(); this.ctx.moveActive(-1); }
-    else if (key === 'Home') { e.preventDefault(); this.ctx.activeIndex$.next(0); }
-    else if (key === 'End') { e.preventDefault(); const count = this.ctx.items$.value.filter(i=>!i.disabled).length; this.ctx.activeIndex$.next(count-1); }
-    else if (key === 'Enter') { e.preventDefault(); this.ctx.selectActive(); }
-    else if (key === 'Escape') { e.preventDefault(); this.ctx.setOpen(false); }
-    else if (key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) { this.ctx.onTypeahead(key); }
+  moveActive(delta: number) {
+    const items = this.items$.value.filter(i => !i.disabled);
+    if (!items.length) return;
+    let idx = this.activeIndex$.value;
+    idx = (idx + delta + items.length) % items.length;
+    this.activeIndex$.next(idx);
+    items[idx].el?.nativeElement.scrollIntoView({ block: 'nearest' });
+  }
+  setActiveByValue(value: string) {
+    const items = this.items$.value.filter(i => !i.disabled);
+    const idx = items.findIndex(i => i.value === value);
+    this.activeIndex$.next(idx);
+  }
+
+  selectActive() {
+    const items = this.items$.value.filter(i => !i.disabled);
+    const idx = this.activeIndex$.value;
+    if (idx >= 0 && idx < items.length) this.choose(items[idx]);
+  }
+
+  choose(item: SelectItemRef) {
+    if (item.disabled) return;
+    this.setValue(item.value, item.label);
+    this.setOpen(false);
+    this.triggerEl?.nativeElement?.focus();
+  }
+
+  onTypeahead(char: string) {
+    clearTimeout(this.typeaheadTimer);
+    this.typeahead += char.toLowerCase();
+    const items = this.items$.value.filter(i => !i.disabled);
+    const idx = items.findIndex(i => i.label.toLowerCase().startsWith(this.typeahead));
+    if (idx >= 0) {
+      this.activeIndex$.next(idx);
+      items[idx].el?.nativeElement.scrollIntoView({ block: 'nearest' });
+    }
+    this.typeaheadTimer = setTimeout(() => (this.typeahead = ''), 600);
   }
 }

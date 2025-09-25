@@ -2,14 +2,13 @@ import { Component, EventEmitter, OnDestroy, OnInit, forwardRef, HostBinding, in
 import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { SelectContext } from './select-context.component';
+import { SelectContext } from './select.context';
 
 @Component({
   selector: 'app-select',
   standalone: true,
   imports: [CommonModule],
   providers: [
-    SelectContext,
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },
   ],
   template: `<ng-content></ng-content>`,

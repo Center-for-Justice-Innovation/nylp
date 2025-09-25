@@ -1,5 +1,6 @@
 /* src/styles/_globals.scss
    Use HSL triplets so Tailwind can render bg-primary/90, text-primary-foreground, etc. */
+   
    :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
