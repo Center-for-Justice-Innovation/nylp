@@ -1,0 +1,68 @@
+<div class="min-h-screen bg-gray-50 px-4 py-6 sm:py-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+      <div class="flex-1">
+        <h1 class="text-2xl sm:text-3xl">NYLP - Decision Tool</h1>
+        <p class="text-muted-foreground text-base mt-1">Welcome, {{ username }}</p>
+      </div>
+      <ui-button variant="outline"  (click)="onSignOut()">
+        Sign Out
+      </ui-button>
+    </div>
+
+    <ui-card>
+      <ui-card-header>
+        <ui-card-title>Your Case Parameters</ui-card-title>
+        <ui-card-description>
+          Select the parameters that match your case to generate comparisons.
+        </ui-card-description>
+      </ui-card-header>
+
+      <ui-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div class="space-y-3">
+              <ui-label class="text-base">County Name</ui-label>
+              <ui-select formControlName="county" [options]="countyNameOptions" placeholder="Select county"></ui-select>
+            </div>
+
+            <div class="space-y-3">
+              <ui-label class="text-base">Court Type</ui-label>
+              <ui-select formControlName="courtType" [options]="courtTypeOptions" placeholder="Select court type"></ui-select>
+            </div>
+
+            <!-- Top Charge -->
+            <div class="space-y-3 sm:col-span-2">
+              <ui-label for="topCharge" class="text-base">Top Charge at Arraignment</ui-label>
+              <ui-select formControlName="topCharge" [options]="topChargeOptions" placeholder="Select top charge"></ui-select>
+            </div>
+
+            <!-- Pending Cases -->
+            <div class="space-y-3">
+              <ui-label for="pendingCases" class="text-base">Pending Cases at Arraignment</ui-label>
+              <ui-select formControlName="pendingCases" [options]="pendingCaseStatusOptions" placeholder="Select pending cases"></ui-select>
+            </div>
+
+            <!-- On Supervision -->
+            <div class="space-y-3">
+              <ui-label for="onSupervision" class="text-base">Supervision at Arraignment</ui-label>
+              <ui-select formControlName="onSupervision" [options]="supervisionOptions" placeholder="Select supervision status"></ui-select>
+            </div>
+
+            <!-- Prior Convictions -->
+            <div class="space-y-3 sm:col-span-2">
+              <ui-label for="priorConvictions" class="text-base">Prior Convictions</ui-label>
+              <ui-select formControlName="priorConvictions" [options]="priorConvictionOptions" placeholder="Select prior convictions"></ui-select>
+            </div>
+          </div>
+
+          <div>
+            <ui-button size="lg" variant="default">
+              Generate Analysis
+            </ui-button>
+          </div>
+        </form>
+      </ui-card-content>
+    </ui-card>
+  </div>
+</div>
