@@ -12,6 +12,7 @@ import { UILabelComponent } from '../../ui/label.component';
 import { UISelectComponent, SelectOption } from '../../ui/select.component';
 
 import { MsalService } from '@azure/msal-angular';
+import { defaultAuthority } from '../../../environments/auth';
 
 export interface DecisionData {
   county: string;
@@ -63,7 +64,7 @@ const penalCodes: readonly string[] = [
   styleUrls: ['./decision-tool.component.scss']
 })
 export class DecisionToolComponent {
-  // @Input() username = '';
+  @Input() username = '';
   @Output() submitDecision = new EventEmitter<DecisionData>();
   @Output() signOut = new EventEmitter<void>();
   private fb = inject(FormBuilder);
@@ -144,13 +145,25 @@ export class DecisionToolComponent {
 
   constructor(private msal: MsalService) {}
 
-  username() {
-    const a = this.msal.instance.getActiveAccount();
-    return a?.name || a?.username || null;
+  email() {
+    const acc = this.msal.instance.getActiveAccount();
+    const claims = acc?.idTokenClaims as any | undefined;
+  
+    // Try common places CIAM/B2C put email, then fall back to username
+    return claims?.emails?.[0] ?? claims?.email ?? acc?.username ?? null;
   }
 
   logout() {
-    this.msal.logoutRedirect();
+    const account =
+    this.msal.instance.getActiveAccount() ||
+    this.msal.instance.getAllAccounts()[0] ||
+    undefined;
+
+    this.msal.logoutRedirect({
+      account,
+      authority: defaultAuthority,                 // e.g. https://nylp.ciamlogin.com/nylp.onmicrosoft.com
+      postLogoutRedirectUri: 'http://localhost:4200/sign-in'
+    });
   }
 
   onSubmit(): void {

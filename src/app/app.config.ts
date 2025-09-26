@@ -27,9 +27,9 @@ export function msalInstanceFactory() {
   return new PublicClientApplication({
     auth: {
       clientId: cfg.clientId,
-      authority: defaultAuthority,                 // ✅ https://nylp.ciamlogin.com/nylp.onmicrosoft.com
-      knownAuthorities: [cfg.knownAuthority],      // ✅ ['nylp.ciamlogin.com']
-      redirectUri: cfg.redirectUri,                // ✅ http://localhost:4200/auth
+      authority: defaultAuthority,                 
+      knownAuthorities: [cfg.knownAuthority],    
+      redirectUri: cfg.redirectUri,             
       postLogoutRedirectUri: cfg.postLogoutRedirectUri,
       navigateToLoginRequestUrl: false
       // IMPORTANT: do NOT set authorityMetadata here (we want discovery)
