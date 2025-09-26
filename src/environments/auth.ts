@@ -1,20 +1,15 @@
 // src/environments/auth.ts
 export const auth = {
-    // Your SPA (client) app registration
-    clientId: '<YOUR_B2C_CLIENT_ID>',
-    // Your B2C tenant domain (NO https)
-    tenantDomain: '<your-tenant>.b2clogin.com',
-    b2cTenant: '<your-tenant>.onmicrosoft.com',
-  
-    // Built-in user flows (policies)
-    policies: {
-      signUpSignIn: 'B2C_1_signupsignin',     // required
-      passwordReset: 'B2C_1_passwordreset',   // optional
-      profileEdit: 'B2C_1_profileedit'        // optional
-    },
-  
-    // Redirects — add prod equivalents too
-    redirectUri: 'http://localhost:4200/auth',
-    postLogoutRedirectUri: 'http://localhost:4200/',
-  };
-  
+  tenantDomain: 'nylp.ciamlogin.com',       // host only (no https)
+  tenantName:   'nylp.onmicrosoft.com',     // name form (NOT the GUID)
+  clientId:     'd8bd6a29-0f55-4e5a-8beb-dd961b447c14',
+
+  redirectUri: 'http://localhost:4200/auth',
+  postLogoutRedirectUri: 'http://localhost:4200/',
+  knownAuthority: 'nylp.ciamlogin.com'
+};
+
+// CIAM default-flow (policy-less) authority:
+export const defaultAuthority =
+  `https://${auth.tenantDomain}/${auth.tenantName}`;
+
