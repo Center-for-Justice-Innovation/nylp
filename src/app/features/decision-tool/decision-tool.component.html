@@ -23,56 +23,36 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div class="space-y-3">
               <ui-label class="text-base">County Name</ui-label>
-              <ui-select [options]="countyNameOptions" placeholder="Select County"></ui-select>
+              <ui-select formControlName="county" [options]="countyNameOptions" placeholder="Select county"></ui-select>
             </div>
 
             <div class="space-y-3">
               <ui-label class="text-base">Court Type</ui-label>
-              <ui-select [options]="courtTypeOptions" placeholder="Select Court Type"></ui-select>
+              <ui-select formControlName="courtType" [options]="courtTypeOptions" placeholder="Select court type"></ui-select>
             </div>
 
             <!-- Top Charge -->
             <div class="space-y-3 sm:col-span-2">
               <ui-label for="topCharge" class="text-base">Top Charge at Arraignment</ui-label>
-              <select id="topCharge" formControlName="topCharge" class="h-12 text-base w-full select">
-                <option value="" disabled selected>Select top charge</option>
-                <option *ngFor="let code of penalCodes" [value]="code">{{ code }}</option>
-              </select>
+              <ui-select formControlName="topCharge" [options]="topChargeOptions" placeholder="Select top charge"></ui-select>
             </div>
 
             <!-- Pending Cases -->
             <div class="space-y-3">
               <ui-label for="pendingCases" class="text-base">Pending Cases at Arraignment</ui-label>
-              <select id="pendingCases" formControlName="pendingCases" class="h-12 text-base w-full select">
-                <option value="" disabled selected>Select pending cases status</option>
-                <option>Missing/null</option>
-                <option>No open cases</option>
-                <option>Open Felony</option>
-                <option>Open Misdemeanor</option>
-              </select>
+              <ui-select formControlName="pendingCases" [options]="pendingCaseStatusOptions" placeholder="Select pending cases"></ui-select>
             </div>
 
             <!-- On Supervision -->
             <div class="space-y-3">
-              <ui-label for="onSupervision" class="text-base">On Supervision Time at Arraignment</ui-label>
-              <select id="onSupervision" formControlName="onSupervision" class="h-12 text-base w-full select">
-                <option value="" disabled selected>Select supervision status</option>
-                <option>Null</option>
-                <option>Yes</option>
-                <option>No</option>
-              </select>
+              <ui-label for="onSupervision" class="text-base">Supervision at Arraignment</ui-label>
+              <ui-select formControlName="onSupervision" [options]="supervisionOptions" placeholder="Select supervision status"></ui-select>
             </div>
 
             <!-- Prior Convictions -->
             <div class="space-y-3 sm:col-span-2">
               <ui-label for="priorConvictions" class="text-base">Prior Convictions</ui-label>
-              <select id="priorConvictions" formControlName="priorConvictions" class="h-12 text-base w-full select">
-                <option value="" disabled selected>Select prior convictions</option>
-                <option>No prior convictions</option>
-                <option>Prior Misdemeanor</option>
-                <option>Prior NVFO</option>
-                <option>Prior VFO</option>
-              </select>
+              <ui-select formControlName="priorConvictions" [options]="priorConvictionOptions" placeholder="Select prior convictions"></ui-select>
             </div>
           </div>
 
