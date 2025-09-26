@@ -1,5 +1,7 @@
 // src/app/app.config.ts
-import { ApplicationConfig, isDevMode } from '@angular/core';
+import { APP_INITIALIZER, PLATFORM_ID, inject, ApplicationConfig, isDevMode } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { MsalService } from '@azure/msal-angular';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -11,13 +13,23 @@ import {
   MsalGuardConfiguration,
   MsalInterceptorConfiguration,
   MsalGuard,
-  MsalService,
   MsalBroadcastService,
   MsalInterceptor
 } from '@azure/msal-angular';
 
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { auth as cfg } from '../environments/auth';
+
+function initializeMsalFactory(platformId: Object, msal: MsalService) {
+  return () => {
+    if (isPlatformBrowser(platformId)) {
+      // IMPORTANT: returns a Promise; Angular will wait for it
+      return msal.instance.initialize();
+    }
+    // On the server, do nothing
+    return Promise.resolve();
+  };
+}
 
 function authorityFor(policy: string) {
   return `https://${cfg.tenantDomain}/${cfg.b2cTenant}/${policy}`;
@@ -66,7 +78,11 @@ export const appConfig: ApplicationConfig = {
     MsalService,
     MsalGuard,
     MsalBroadcastService,
-    // If you will call protected APIs:
-    // { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeMsalFactory,
+      deps: [PLATFORM_ID, MsalService],
+      multi: true,
+    }
   ],
 };

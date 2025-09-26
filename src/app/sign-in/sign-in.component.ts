@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
 import { InteractionType, RedirectRequest } from '@azure/msal-browser';
 import { auth as cfg } from '../../environments/auth';
+import { UIButtonComponent } from '../ui/button.component';
 
 function authorityFor(policy: string) {
   return `https://${cfg.tenantDomain}/${cfg.b2cTenant}/${policy}`;
@@ -10,6 +11,7 @@ function authorityFor(policy: string) {
 @Component({
   selector: 'app-sign-in',
   standalone: true,
+  imports: [UIButtonComponent],
   template: `
   <section class="min-h-screen grid place-items-center p-6">
     <div class="max-w-md w-full border rounded-2xl p-6 shadow-sm">
@@ -17,8 +19,8 @@ function authorityFor(policy: string) {
       <p class="text-sm text-gray-600 mb-6">Sign in or create an account to continue.</p>
 
       <div class="grid gap-3">
-        <button class="btn" (click)="signIn()">Sign in</button>
-        <button class="btn-outline" (click)="register()">Register</button>
+        <ui-button class="btn" (click)="signIn()">Sign in</ui-button>
+        <ui-button class="btn-outline" (click)="register()">Register</ui-button>
         <a class="link text-sm" (click)="resetPassword()">Forgot your password?</a>
       </div>
     </div>
